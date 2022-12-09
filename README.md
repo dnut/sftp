@@ -132,6 +132,24 @@ ssh-keygen -t ed25519 -f ssh_host_ed25519_key < /dev/null
 ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key < /dev/null
 ```
 
+## Customize Server Configuration
+
+Mount a directory containing `*.conf` files to `/etc/ssh/sshd_config.d` in the container to customize sshd_config. These files may include any directives that are allowed in [sshd_config(5)](https://linux.die.net/man/5/sshd_config). You can insert additional configuration or override existing configuration. Check the [included sshd_config](https://github.com/atmoz/sftp/blob/master/files/sshd_config) to see the base configuration.
+
+Let's say you put your configuration files on the host in `/host/path/sshd_config.d/`, you could then mount them into a basic container like so:
+```bash
+docker run \
+    -p 22:22 \
+    -d atmoz/sftp \
+    -v /host/path/sshd_config.d:/etc/ssh/sshd_config.d/ \
+    foo:pass:::share
+```
+
+Example use case: you want to restrict a user to only be able to access a subfolder of home called `share`. Include a configuration file called `/host/path/sshd_config.d/override-chroot.conf` containing:
+```conf
+ChrootDirectory %h/share
+```
+
 ## Execute custom scripts or applications
 
 Put your programs in `/etc/sftp.d/` and it will automatically run when the container starts.
