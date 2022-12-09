@@ -1,3 +1,7 @@
+# Supports customization by mounting a volume to /etc/ssh/sshd_config.d/
+# This must be at the top of the file to enable overrides.
+Include /etc/ssh/sshd_config.d/*.conf
+
 # Secure defaults
 # See: https://stribika.github.io/2015/01/04/secure-secure-shell.html
 Protocol 2
@@ -21,5 +25,3 @@ ChrootDirectory %h
 # Enable this for more logs
 #LogLevel VERBOSE
 
-# Supports customization by mounting a volume to /etc/ssh/sshd_config.d/
-Include /etc/ssh/sshd_config.d/*.conf
